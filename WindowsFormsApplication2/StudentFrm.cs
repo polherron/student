@@ -74,14 +74,14 @@ namespace WindowsFormsApplication2
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message, "Invalid File Selection");
                 }
             }
         }
 
         private bool validateForm()
         {
-            return (validateFName() && validateSName() && validateDate());
+            return (validateFName() && validateSName() && validateDate() && validateMod11());
         }
 
         private bool validateFName()
@@ -113,12 +113,29 @@ namespace WindowsFormsApplication2
             }
             return (DateTime.TryParse(txtDOB.Text, out dt));
         }
+
         private bool validateMod11()
         {
-            for (int i = 0; i < length; i++)
-            {
+            int total = 0;
+            int result = 0;
 
+
+            for (int i = 0; i < txtSNumber.Text.Length; i++)
+            {
+                if (!int.TryParse(txtSNumber.Text.ElementAt(i).ToString(),out result))
+                {
+                    MessageBox.Show("Invalid Student ID", "Student ID Error");
+                    return false;
+                }
+                total += result * (6-i);
             }
+            if (total % 11 != 0)
+            {
+                MessageBox.Show("Invalid Student ID", "Student ID Error");
+                return false;
+            }
+
+            return true;
         }
 
 
